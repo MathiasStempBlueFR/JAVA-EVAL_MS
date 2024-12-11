@@ -1,11 +1,11 @@
 package com.JAVA_EVAL.JAVA.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
+import java.util.List;
+
+@Entity
 public class Convention {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,5 +17,14 @@ public class Convention {
 
     float Subvention;
 
+    @Column(name = "max_salary")
     Integer MaxSalary;
+
+    @ManyToOne
+    @JoinColumn(name = "corporation_id")
+    private Corporation corporation;
+
+    @OneToMany(mappedBy = "convention")
+    private List<Salary> salaries;
+
 }

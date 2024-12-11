@@ -7,6 +7,7 @@ import com.JAVA_EVAL.JAVA.dao.UserDao;
 import com.JAVA_EVAL.JAVA.model.Corporation;
 import com.JAVA_EVAL.JAVA.model.Salary;
 import com.JAVA_EVAL.JAVA.model.User;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,32 +44,37 @@ public class UserController {
         return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User newUser = userDao.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    @PostMapping("/user")
+    public ResponseEntity<User> create(
+            @RequestBody @Valid User user){
+        user.setId(null);
+        user.setEmail(user.getEmail());
+        user.setPassword(user.getPassword());
+        userDao.save(user);
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
     @PutMapping("/user/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable int id, @RequestBody User updatedUser) {
-        Optional<User> existingUser = userDao.findById(id);
-        if (existingUser.isPresent()) {
-            User user = existingUser.get();
-            user.setEmail(updatedUser.getEmail());
-            user.setPassword(updatedUser.getPassword());
-            userDao.save(user);
-            return ResponseEntity.ok(user);
+    public ResponseEntity<User> update(
+            @RequestBody @Valid User userSend, @PathVariable Integer id){
+        userSend.setId(id);
+        Optional<User> optionalUser = userDao.findById(id);
+        if(optionalUser.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.notFound().build();
+        userDao.save(userSend);
+        return new ResponseEntity<>(optionalUser.get(), HttpStatus.OK);
     }
 
     @DeleteMapping("/user/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable int id) {
-        if (userDao.existsById(id)) {
-            userDao.deleteById(id);
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<User> delete(@PathVariable Integer id){
+        Optional<User> optionalUser = userDao.findById(id);
+
+        if(optionalUser.isEmpty()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return ResponseEntity.notFound().build();
+        userDao.deleteById(id);
+        return new ResponseEntity<>(optionalUser.get(), HttpStatus.OK);
     }
 
 }

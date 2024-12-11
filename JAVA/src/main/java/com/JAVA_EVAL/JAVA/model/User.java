@@ -22,4 +22,33 @@ public class User {
     String email;
 
     String password;
+
+    @ManyToOne
+    @JoinColumn(name = "corporation_id", nullable = true)
+    private Corporation corporation;
+
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public @NotBlank(message = "Veuillez entrer votre email") String getEmail() {
+        return email;
+    }
+
+    public void setEmail(@NotBlank(message = "Veuillez entrer votre email") String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

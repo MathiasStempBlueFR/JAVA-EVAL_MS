@@ -1,12 +1,12 @@
 package com.JAVA_EVAL.JAVA.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.Internal;
 
+import java.util.List;
+
+@Entity
 public class Corporation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,4 +15,7 @@ public class Corporation {
     @Column(length = 100, unique = true)
     @NotBlank(message = "Veuillez entrer votre nom")
     String name;
+
+    @OneToMany(mappedBy = "corporation")
+    private List<Convention> conventions;
 }
