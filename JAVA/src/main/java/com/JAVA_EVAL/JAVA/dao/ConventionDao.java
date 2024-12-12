@@ -4,6 +4,9 @@ import com.JAVA_EVAL.JAVA.model.Convention;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface ConventionDao extends JpaRepository<Convention, Integer> {
+public interface ConventionDao extends JpaRepository<Convention, String> {
+    Optional<Convention> findById(int id);
 }
