@@ -1,5 +1,6 @@
 package com.JAVA_EVAL.JAVA.model;
 
+import com.JAVA_EVAL.JAVA.view.ConventionView;
 import com.JAVA_EVAL.JAVA.view.SalaryView;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -16,18 +17,18 @@ import java.util.List;
 public class Convention {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonView(SalaryView.class)
+    @JsonView({SalaryView.class, ConventionView.class})
     Integer id;
 
     @Column(length = 100, unique = true)
     @NotBlank(message = "Veuillez entrer votre nom")
-    @JsonView(SalaryView.class)
+    @JsonView({SalaryView.class, ConventionView.class})
     String name;
 
-    @JsonView(SalaryView.class)
+    @JsonView({SalaryView.class, ConventionView.class})
     float Subvention;
 
-    @JsonView(SalaryView.class)
+    @JsonView({SalaryView.class, ConventionView.class})
     @Column(name = "max_salary")
     Integer MaxSalary;
 

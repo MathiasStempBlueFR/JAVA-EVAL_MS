@@ -4,6 +4,8 @@ import com.JAVA_EVAL.JAVA.dao.ConventionDao;
 import com.JAVA_EVAL.JAVA.dao.SalaryDao;
 import com.JAVA_EVAL.JAVA.model.Convention;
 import com.JAVA_EVAL.JAVA.model.Salary;
+import com.JAVA_EVAL.JAVA.security.IsAdmin;
+import com.JAVA_EVAL.JAVA.security.IsCorpo;
 import com.JAVA_EVAL.JAVA.view.SalaryView;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;
@@ -25,12 +27,14 @@ public class SalaryController {
     @Autowired
     private ConventionDao conventionDao;
 
+    @IsCorpo
     @GetMapping("/salary")
     @JsonView(SalaryView.class)
     public List<Salary> getAll(){
         return salaryDao.findAll();
     }
 
+    @IsCorpo
     @GetMapping("salary/{id}")
     public ResponseEntity<Salary> get(@PathVariable Integer id){
         Optional<Salary> optionalSalary = salaryDao.findById(id);
@@ -40,6 +44,7 @@ public class SalaryController {
         return new ResponseEntity<>(optionalSalary.get(), HttpStatus.OK);
     }
 
+    @IsAdmin
     @PostMapping("/salary")
     public ResponseEntity<Salary> create(
             @RequestBody @Valid Salary salary){
@@ -57,6 +62,7 @@ public class SalaryController {
         return new ResponseEntity<>(salary, HttpStatus.CREATED);
     }
 
+    @IsAdmin
     @PutMapping("/salary/{id}")
     public ResponseEntity<Salary> update(
             @RequestBody @Valid Salary salarySend,
@@ -71,6 +77,7 @@ public class SalaryController {
         return new ResponseEntity<>(salarySend, HttpStatus.OK);
     }
 
+    @IsAdmin
     @DeleteMapping("salary/{id}")
     public ResponseEntity<Salary> delete(@PathVariable Integer id){
         Optional<Salary> optionalSalary = salaryDao.findById(id);

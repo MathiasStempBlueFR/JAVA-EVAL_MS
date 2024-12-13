@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ConventionDao extends JpaRepository<Convention, String> {
+public interface ConventionDao extends JpaRepository<Convention, Integer> {
     Optional<Convention> findById(int id);
 }
