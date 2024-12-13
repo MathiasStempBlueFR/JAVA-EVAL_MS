@@ -4,6 +4,8 @@ import com.JAVA_EVAL.JAVA.dao.ConventionDao;
 import com.JAVA_EVAL.JAVA.dao.SalaryDao;
 import com.JAVA_EVAL.JAVA.model.Convention;
 import com.JAVA_EVAL.JAVA.model.Salary;
+import com.JAVA_EVAL.JAVA.view.SalaryView;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ public class SalaryController {
     private ConventionDao conventionDao;
 
     @GetMapping("/salary")
+    @JsonView(SalaryView.class)
     public List<Salary> getAll(){
         return salaryDao.findAll();
     }
@@ -50,7 +53,6 @@ public class SalaryController {
         salary.setMatricule(salary.getMatricule());
         salary.setBarCode(salary.getBarCode());
         salary.setUser(salary.getUser());
-        salary.setConvention(salary.getConvention());
         salaryDao.save(salary);
         return new ResponseEntity<>(salary, HttpStatus.CREATED);
     }

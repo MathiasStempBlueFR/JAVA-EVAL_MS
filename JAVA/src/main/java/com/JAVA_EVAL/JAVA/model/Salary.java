@@ -1,5 +1,8 @@
 package com.JAVA_EVAL.JAVA.model;
 
+import com.JAVA_EVAL.JAVA.view.SalaryView;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -11,22 +14,27 @@ import lombok.Setter;
 public class Salary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(SalaryView.class)
     Integer id;
 
     @Column(length = 100, unique = true)
     @NotBlank(message = "Veuillez entrer votre matricule")
+    @JsonView(SalaryView.class)
     String matricule;
 
     @Column(length = 100, unique = true)
     @NotBlank(message = "Veuillez mettre le code barre")
+    @JsonView(SalaryView.class)
     String BarCode;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = true)
+    @JsonView(SalaryView.class)
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "convention_id", nullable = true)
+    @JsonView(SalaryView.class)
     private Convention convention;
 
     public Integer getId() {

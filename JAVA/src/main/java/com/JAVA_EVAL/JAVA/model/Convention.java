@@ -1,5 +1,8 @@
 package com.JAVA_EVAL.JAVA.model;
 
+import com.JAVA_EVAL.JAVA.view.SalaryView;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -13,19 +16,24 @@ import java.util.List;
 public class Convention {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(SalaryView.class)
     Integer id;
 
     @Column(length = 100, unique = true)
     @NotBlank(message = "Veuillez entrer votre nom")
+    @JsonView(SalaryView.class)
     String name;
 
+    @JsonView(SalaryView.class)
     float Subvention;
 
+    @JsonView(SalaryView.class)
     @Column(name = "max_salary")
     Integer MaxSalary;
 
     @ManyToOne
     @JoinColumn(name = "corporation_id")
+    @JsonView(SalaryView.class)
     private Corporation corporation;
 
     @OneToMany(mappedBy = "convention")
