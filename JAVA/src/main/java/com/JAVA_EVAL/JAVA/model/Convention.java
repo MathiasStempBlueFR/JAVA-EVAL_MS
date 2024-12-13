@@ -5,6 +5,7 @@ import com.JAVA_EVAL.JAVA.view.SalaryView;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class Convention {
     @JsonView({SalaryView.class, ConventionView.class})
     String name;
 
+    @Min(0)
     @JsonView({SalaryView.class, ConventionView.class})
     float Subvention;
 
