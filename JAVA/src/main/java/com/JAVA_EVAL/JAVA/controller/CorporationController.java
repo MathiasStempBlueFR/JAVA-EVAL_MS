@@ -47,6 +47,9 @@ public class CorporationController {
             @RequestBody @Valid Corporation corporation){
         corporation.setId(null);
         corporation.setName(corporation.getName());
+        if (corporationDao.findByName(corporation.getName()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         corporationDao.save(corporation);
         return new ResponseEntity<>(corporation, HttpStatus.CREATED);
     }
@@ -59,6 +62,9 @@ public class CorporationController {
         Optional<Corporation> optionalCorporation = corporationDao.findById(id);
         if (optionalCorporation.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (corporationDao.findByName(corpoSend.getName()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         corporationDao.save(corpoSend);
         return new ResponseEntity<>(optionalCorporation.get(), HttpStatus.OK);

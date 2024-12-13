@@ -26,12 +26,12 @@ public class ConventionController {
     @Autowired
     private ConventionDao conventionDao;
 
-    //@IsCorpo
+    @IsCorpo
     @GetMapping("/convention")
     @JsonView(ConventionView.class)
     public List<Convention> getAll() {return conventionDao.findAll();}
 
-    //@IsCorpo
+    @IsCorpo
     @GetMapping("/convention/{id}")
     public ResponseEntity<Convention> get(@PathVariable Integer id){
         Optional<Convention> optionalConvention = conventionDao.findById(id);
@@ -41,19 +41,25 @@ public class ConventionController {
         return new ResponseEntity<>(optionalConvention.get(), HttpStatus.OK);
     }
 
-    //@IsAdmin
+    @IsAdmin
     @PostMapping("/convention")
     public ResponseEntity<Convention> create(
             @RequestBody @Valid Convention convention){
         convention.setId(null);
         convention.setName(convention.getName());
         convention.setSubvention(convention.getSubvention());
+        if (convention.getSubvention() < 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Subventions négatives
+        }
         convention.setMaxSalary(convention.getMaxSalary());
+        if (convention.getMaxSalary() < 1) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Nombre max de salariés invalide
+        }
         conventionDao.save(convention);
         return new ResponseEntity<>(convention, HttpStatus.CREATED);
     }
 
-    //@IsAdmin
+    @IsAdmin
     @PutMapping("/convention/{id}")
     public ResponseEntity<Convention> update(
             @RequestBody @Valid Convention conventionSend, @PathVariable Integer id){
@@ -62,11 +68,17 @@ public class ConventionController {
         if(optionalConvention.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        if (conventionSend.getSubvention() < 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Subventions négatives
+        }
+        if (conventionSend.getMaxSalary() < 1) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // Nombre max de salariés invalide
+        }
         conventionDao.save(conventionSend);
         return new ResponseEntity<>(conventionSend, HttpStatus.OK);
     }
 
-    //@IsAdmin
+    @IsAdmin
     @DeleteMapping("/convention/{id}")
     public ResponseEntity<Boolean> delete(@PathVariable Integer id){
         Optional<Convention> optionalConvention = conventionDao.findById(id);

@@ -56,7 +56,14 @@ public class SalaryController {
 
         salary.setId(null);
         salary.setMatricule(salary.getMatricule());
+        if (salary.getMatricule().length() < 3 || salary.getMatricule().length() > 10) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
         salary.setBarCode(salary.getBarCode());
+        if (salary.getBarCode() == null || salary.getBarCode().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         salary.setUser(salary.getUser());
         salaryDao.save(salary);
         return new ResponseEntity<>(salary, HttpStatus.CREATED);
@@ -72,6 +79,12 @@ public class SalaryController {
 
         if ((optionalSalary.isEmpty())){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (salarySend.getMatricule().length() < 3 || salarySend.getMatricule().length() > 10) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        if (salarySend.getBarCode() == null || salarySend.getBarCode().isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         salaryDao.save(salarySend);
         return new ResponseEntity<>(salarySend, HttpStatus.OK);

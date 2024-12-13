@@ -58,6 +58,9 @@ public class UserController {
             @RequestBody @Valid User user){
         user.setId(null);
         user.setEmail(user.getEmail());
+        if (userDao.findByEmail(user.getEmail()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         user.setPassword(user.getPassword());
         userDao.save(user);
         return new ResponseEntity<>(user, HttpStatus.CREATED);
@@ -71,6 +74,9 @@ public class UserController {
         Optional<User> optionalUser = userDao.findById(id);
         if(optionalUser.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if (userDao.findByEmail(userSend.getEmail()).isPresent()) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         userDao.save(userSend);
         return new ResponseEntity<>(optionalUser.get(), HttpStatus.OK);
